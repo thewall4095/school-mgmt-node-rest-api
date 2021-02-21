@@ -3,6 +3,7 @@ const Sequelize = require("sequelize");
 const sequelize = require("../../config/database");
 
 const tableName = "subject";
+const Classs = require("./Class");
 
 const Subject = sequelize.define(
   "Subject",
@@ -27,5 +28,11 @@ const Subject = sequelize.define(
   },
   { tableName }
 );
+
+Classs.hasOne(Subject);
+Subject.belongsTo(Classs);
+
+// Subject.hasOne(Classs);
+// Classs.belongsTo(Subject);
 
 module.exports = Subject;

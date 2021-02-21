@@ -3,6 +3,7 @@ const Sequelize = require("sequelize");
 const sequelize = require("../../config/database");
 
 const tableName = "teacher";
+const Classs = require("./Class");
 
 const Teacher = sequelize.define(
   "Teacher",
@@ -22,5 +23,12 @@ const Teacher = sequelize.define(
   },
   { tableName }
 );
+
+Classs.hasOne(Teacher);
+Teacher.belongsTo(Classs);
+
+
+// Teacher.hasOne(Classs);
+// Classs.belongsTo(Teacher);
 
 module.exports = Teacher;

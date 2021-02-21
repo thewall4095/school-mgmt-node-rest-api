@@ -1,7 +1,7 @@
 const Subject = require("../models/Subject");
 const Teacher = require("../models/Teacher");
 const SubjectTeacher = require("../models/SubjectTeacher");
-const Class = require("../models/Class");
+const Classs = require("../models/Class");
 
 const TeacherController = () => {
     const getTeachers = async (req, res) => {
@@ -10,20 +10,15 @@ const TeacherController = () => {
                 include:[
                     {
                         model : Subject,
-                        through:{
-                          attributes: []
-                        }
                     },
                     {
-                        model : Class,
-                        through:{
-                          attributes: []
-                        }
+                        model : Classs,
                     },
                 ]
             });
             res.status(200).send({success: true, data: teachers});
         }catch (err) {
+            console.log(err);
           return res.status(500).json({ msg: "Internal server error" });
         }
     };

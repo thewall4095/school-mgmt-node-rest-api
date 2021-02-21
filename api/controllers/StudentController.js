@@ -2,7 +2,7 @@ const Contact = require("../models/Contact");
 const Student = require("../models/Student");
 const Utils = require('../services/utils.service');
 const ContactStudent = require("../models/ContactStudent");
-const Class = require("../models/Class");
+const Classs = require("../models/Class");
 
 const StudentController = () => {
     const getStudents = async (req, res) => {
@@ -15,7 +15,7 @@ const StudentController = () => {
                             model : Contact,
                         },
                         {
-                            model : Class,
+                            model : Classs,
                             required: true,
                         },
                     ]

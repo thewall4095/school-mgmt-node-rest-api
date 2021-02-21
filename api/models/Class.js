@@ -2,10 +2,10 @@ const Sequelize = require("sequelize");
 
 const sequelize = require("../../config/database");
 
-const tableName = "class";
+const tableName = "classs";
 
-const Class = sequelize.define(
-  "Class",
+const Classs = sequelize.define(
+  "Classs",
   {
     startTime: {
         type: Sequelize.DATE,
@@ -17,4 +17,4 @@ const Class = sequelize.define(
   { tableName }
 );
 
-module.exports = Class;
+module.exports = Classs;

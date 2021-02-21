@@ -1,5 +1,5 @@
 const Classroom = require("../models/Classroom");
-const Class = require("../models/Class");
+const Classs = require("../models/Class");
 
 const ClassroomController = () => {
 
@@ -10,7 +10,7 @@ const ClassroomController = () => {
                 classrooms = await Classroom.findAll({
                     include:[
                         {
-                            model : Class,
+                            model : Classs,
                             required: true,
                             // where:{
                             //     startTime : 'done',
@@ -19,7 +19,16 @@ const ClassroomController = () => {
                     ]
                 });
             }else{
-                classrooms = await Classroom.findAll();
+                classrooms = await Classroom.findAll({
+                    include:[
+                        {
+                            model : Classs,
+                            // where:{
+                            //     startTime : 'done',
+                            // },
+                        },
+                    ]
+                });
             }
 
             res.status(200).send({success: true, data: classrooms});

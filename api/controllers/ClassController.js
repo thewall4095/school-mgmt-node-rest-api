@@ -1,12 +1,12 @@
-const Class = require("../models/Class");
+const Classs = require("../models/Class");
 const Teacher = require("../models/Teacher");
 const Subject = require("../models/Subject");
 const Classroom = require("../models/Classroom");
 const Student = require("../models/Student");
 
-const TeacherClass = require("../models/TeacherClass");
-const SubjectClass = require("../models/SubjectClass");
-const ClassroomClass = require("../models/ClassroomClass");
+// const TeacherClass = require("../models/TeacherClass");
+// const SubjectClass = require("../models/SubjectClass");
+// const ClassroomClass = require("../models/ClassroomClass");
 const StudentClass = require("../models/StudentClass");
 
 
@@ -14,32 +14,20 @@ const ClassController = () => {
 
     const getClass = async (req, res) => {
         try{
-            let classes = await Class.findAll({
+            let classes = await Classs.findAll({
                 include:[
                     {
                         model : Classroom,
-                        through:{
-                          attributes: []
-                        }
                     },
-                    // {
-                    //     model : Teacher,
-                    //     through:{
-                    //       attributes: []
-                    //     }
-                    // },
-                    // {
-                    //     model : Subject,
-                    //     through:{
-                    //       attributes: []
-                    //     }
-                    // },
-                    // {
-                    //     model : Student,
-                    //     through:{
-                    //       attributes: []
-                    //     }
-                    // },
+                    {
+                        model : Teacher,
+                    },
+                    {
+                        model : Subject,
+                    },
+                    {
+                        model : Student,
+                    },
                 ]
             });
             res.status(200).send({success: true, data: classes});
@@ -53,9 +41,9 @@ const ClassController = () => {
         try{
             console.log(req.body);
             if(req.body.startTime && req.body.endTime && req.body.classroom_id && req.body.teacher_id && req.body.subject_id && req.body.student_ids){
-                let createdClass = await Class.create({
+                let createdClass = await Classs.create({
                     startTime: req.body.startTime,
-                    endTime: req.body.startTime
+                    endTime: req.body.endTime
                 });
 
                 if(createdClass && createdClass.id){
@@ -65,30 +53,39 @@ const ClassController = () => {
                         if(studentids[i]){
                             toBulkCreate.push({
                                 StudentId: studentids[i],
-                                ClassId: createdClass.id,
+                                ClasssId: createdClass.id,
                             })
                         }
                     }
             
-                    var result1 = await ClassroomClass.create({
-                        ClassroomId: req.body.classroom_id,
-                        ClassId: createdClass.id,
+                    var result1 = await Classroom.findOne({
+                        where: {
+                            id: req.body.classroom_id,
+                        }
+                    });
+                    await createdClass.setClassroom(result1);
+
+                    var result2 = await Teacher.findOne({
+                        where: {
+                            id: req.body.teacher_id,
+                        }
+                    });
+                    await createdClass.setTeacher(result2);
+
+                    var result3 = await Subject.findOne({
+                        where: {
+                            id: req.body.subject_id,
+                        }
                     });
 
-                    var result2 = await TeacherClass.create({
-                        TeacherId: req.body.teacher_id,
-                        ClassId: createdClass.id,
-                    });
-                    var result3 = await SubjectClass.create({
-                        SubjectId: req.body.subject_id,
-                        ClassId: createdClass.id,
-                    });
+                    await createdClass.setSubject(result3);
+
                     console.log(toBulkCreate);
 
                     var result4 = await StudentClass.bulkCreate(toBulkCreate);
         
-                    let values = await Promise.all([result1, result2, result3, result4])
-                    console.log(values, 'qwertyu');
+                    // let values = await Promise.all([result1, result2, result3, result4])
+                    // console.log(values, 'qwertyu');
                     let data = {
                         createdClass: createdClass,
                         ClassroomClass: result1,
@@ -98,11 +95,11 @@ const ClassController = () => {
                     }
 
                     // createdClass['attributes'] = values;
-                    values.push(data);
+                    // values.push(data);
                     // createdClass = Object.assign(createdClass, {
                     //     attributes: values
                     // });
-                    console.log(values);
+                    // console.log(values);
                     res.status(200).send({success: true, data: data});
                 }
             }else{  
