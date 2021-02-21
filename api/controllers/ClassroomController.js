@@ -1,35 +1,35 @@
 const Classroom = require("../models/Classroom");
 const Classs = require("../models/Class");
+const Sequelize = require("sequelize");
+const Op = Sequelize.Op;
 
 const ClassroomController = () => {
 
     const getClassroom = async (req, res) => {
         try{
             let classrooms = [];
-            if(req.query.available=='true'){
+            // if(req.query.startTime && req.query.endTime){
+            //     classrooms = await Classroom.findAll({
+            //         include:[
+            //             {
+            //                 model : Classs,
+            //                 required: true,
+            //                 where:{
+            //                     [Op.gte]: moment(req.query.startTime).toDate(),
+            //                     [Op.lte]: moment(req.query.endTime).toDate(),
+            //                 },
+            //             },
+            //         ]
+            //     });
+            // }else{
                 classrooms = await Classroom.findAll({
                     include:[
                         {
                             model : Classs,
-                            required: true,
-                            // where:{
-                            //     startTime : 'done',
-                            // },
                         },
                     ]
                 });
-            }else{
-                classrooms = await Classroom.findAll({
-                    include:[
-                        {
-                            model : Classs,
-                            // where:{
-                            //     startTime : 'done',
-                            // },
-                        },
-                    ]
-                });
-            }
+            // }
 
             res.status(200).send({success: true, data: classrooms});
         }catch (err) {

@@ -1,4 +1,5 @@
 const Subject = require("../models/Subject");
+const Student = require("../models/Student");
 const Teacher = require("../models/Teacher");
 const SubjectTeacher = require("../models/SubjectTeacher");
 const Classs = require("../models/Class");
@@ -22,6 +23,38 @@ const TeacherController = () => {
           return res.status(500).json({ msg: "Internal server error" });
         }
     };
+
+    const getStudentsOfTeacher = async (req, res) => {
+        try{
+            if(req.query.teacher_id){
+            let students = [];
+            let teacher = await Teacher.findOne({
+                where: {
+                    id: req.query.teacher_id
+                },
+                include:[
+                    {
+                        model : Classs,
+                        include: [
+                            {
+                                model : Student,
+                            },
+                        ]
+                    },
+                ]
+            });
+            if(teacher && teacher.id){
+                res.status(200).send({success: true, data: teacher.Classs.Students});
+            }
+        }else{
+            res.status(200).send({success: false, data: "Missing params!"});
+
+        }
+        }catch (err) {
+            console.log(err);
+          return res.status(500).json({ msg: "Internal server error" });
+        }
+    }
 
     const initTeachers = async (req,res) => {
         try{
@@ -169,6 +202,7 @@ const TeacherController = () => {
 
     return {
         getTeachers,
+        getStudentsOfTeacher,
         initTeachers
     };
 };

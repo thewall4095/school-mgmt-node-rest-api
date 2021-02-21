@@ -1,5 +1,6 @@
 const routes = {
   'GET /getTeachers': 'TeacherController.getTeachers',
+  'GET /getStudentsOfTeacher': 'TeacherController.getStudentsOfTeacher',
   'POST /initTeachers': 'TeacherController.initTeachers',
 
   'GET /getStudents': 'StudentController.getStudents',
